@@ -30,6 +30,7 @@ public class ProxySettingsDialog extends Dialog {
 	private static final Logger LOGGER = LogManager.getLogger(ProxySettingsDialog.class);
 	
 	private static final String TEST_CONN_URL = "http://www.google.com";
+	public static final String PROXY_ERROR_MSG = "The tool could not establish a connection. Please check/change the 'Proxy configuration'. If the issue persists ask for support in the relevant functional mailbox.";
 	
 	public ProxySettingsDialog(Shell parent, int style) {
 		super(parent, style);
@@ -124,7 +125,7 @@ public class ProxySettingsDialog extends Dialog {
 				// otherwise not working
 				try {
 					Actions.save(mode, hostname.getText(), port.getText());
-				} catch (IOException e) {
+				} catch (Exception e) {
 					LOGGER.error("There is an error upon saving the configuration before testing", e);
 					e.printStackTrace();
 					return;
@@ -140,7 +141,7 @@ public class ProxySettingsDialog extends Dialog {
 					icon = SWT.ICON_INFORMATION;
 				}
 				else {
-					message = "Test connection failed!";
+					message = PROXY_ERROR_MSG;
 					icon = SWT.ICON_ERROR;
 				}
 				
@@ -184,7 +185,7 @@ public class ProxySettingsDialog extends Dialog {
 		proxyMode.setSelection(new StructuredSelection(config.getProxyMode()));
 	}
 	
-	public static void main(String args[]) throws IOException {
+	public static void main(String[] args) throws IOException {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		ProxySettingsDialog dialog = new ProxySettingsDialog(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
